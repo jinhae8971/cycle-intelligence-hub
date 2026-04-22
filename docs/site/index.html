@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cycle Intelligence Hub</title>
+<meta name="description" content="Aggregated view of all market cycle intelligence systems.">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="https://unpkg.com/prop-types@15/prop-types.min.js"></script>
+<script src="https://unpkg.com/recharts@2/umd/Recharts.js"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --bg-card: #111827;
+    --bg-elevated: #1a2332;
+    --border: #1f2937;
+    --border-strong: #374151;
+    --text: #e5e7eb;
+    --text-dim: #9ca3af;
+    --text-muted: #6b7280;
+    --capitulation: #0a4d68;
+    --recovery: #3a8891;
+    --expansion: #f6c945;
+    --late-bull: #e76f51;
+    --euphoria: #c1121f;
+    --green: #10b981;
+    --red: #ef4444;
+    --amber: #f59e0b;
+    --blue: #3b82f6;
+    --purple: #a855f7;
+  }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    margin: 0;
+  }
+  .font-mono { font-family: 'JetBrains Mono', monospace; }
+  .tabular-nums { font-variant-numeric: tabular-nums; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-in { animation: fadeIn 0.4s ease-out; }
+
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  .shimmer {
+    background: linear-gradient(90deg,
+      rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.02) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+  }
+
+  @keyframes pulseGlow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(231, 111, 81, 0.3); }
+    50% { box-shadow: 0 0 12px 4px rgba(231, 111, 81, 0.2); }
+  }
+  .euphoria-glow { animation: pulseGlow 2.5s infinite; }
+
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
+
+  .system-card {
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+  .system-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--border-strong) !important;
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel" data-presets="react">
+const { useState, useEffect, useMemo } = React;
+const {
+  ScatterChart, Scatter, XAxis, YAxis, ZAxis, CartesianGrid,
+  Tooltip, ReferenceArea, ReferenceLine, ResponsiveContainer, Cell,
+  LineChart, Line, AreaChart, Area, BarChart, Bar,
+} = Recharts;
+
+const DATA_BASE = "./data/";
+
+const COLORS = {
+  bg: '#0a0e1a', bgCard: '#111827', bgElevated: '#1a2332',
+  border: '#1f2937', borderStrong: '#374151',
+  text: '#e5e7eb', textDim: '#9ca3af', textMuted: '#6b7280',
+  capitulation: '#0a4d68', recovery: '#3a8891', expansion: '#f6c945',
+  lateBull: '#e76f51', euphoria: '#c1121f',
+  green: '#10b981', red: '#ef4444', amber: '#f59e0b',
+  blue: '#3b82f6', purple: '#a855f7',
+};
+
+const PHASE_DEFS = [
+  { name: 'Capitulation', range: [0, 20],   color: COLORS.capitulation, emoji: '🧊' },
+  { name: 'Recovery',     range: [20, 40],  color: COLORS.recovery,     emoji: '🌱' },
+  { name: 'Expansion',    range: [40, 60],  color: COLORS.expansion,    emoji: '📈' },
+  { name: 'Late Bull',    range: [60, 80],  color: COLORS.lateBull,     emoji: '🔥' },
+  { name: 'Euphoria',     range: [80, 100], color: COLORS.euphoria,     emoji: '🚨' },
+];
+
+function phaseFor(score) {
+  if (score == null || isNaN(score)) return PHASE_DEFS[2];
+  return PHASE_DEFS.find(p => score >= p.range[0] && score < p.range[1]) || PHASE_DEFS[4];
+}
+
+async function fetchJSON(path) {
+  const url = DATA_BASE + path + "?t=" + Date.now();
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(`${path}: ${r.status}`);
+  return await r.json();
+}
+
+// ── UI Primitives ──
+function Card({ children, className = '', title, subtitle, icon, action }) {
+  return (
+    <div className={`rounded-2xl p-5 border ${className}`}
+      style={{ background: COLORS.bgCard, borderColor: COLORS.border }}>
+      {(title || icon || action) && (
+        <div className="flex items-center gap-2 mb-3">
+          {icon && <span className="text-sm">{icon}</span>}
+          {title && <h3 className="text-xs font-medium tracking-widest uppercase"
+            style={{ color: COLORS.textDim }}>{title}</h3>}
+          {subtitle && <span className="ml-auto text-xs font-mono"
+            style={{ color: COLORS.textMuted }}>{subtitle}</span>}
+          {action && <div className="ml-auto">{action}</div>}
+        </div>
+      )}
+      {children}
+    </div>
+  );
+}
+
+// ── System Score Gauge (compact, one per system) ──
+function SystemGauge({ system }) {
+  const score = system.score;
+  const phase = phaseFor(score);
+  const angle = ((score ?? 0) / 100) * 180 - 90;
+  const r = 70, cx = 90, cy = 80;
+  const needleX = cx + r * Math.cos((angle - 90) * Math.PI / 180);
+  const needleY = cy + r * Math.sin((angle - 90) * Math.PI / 180);
+  const dashArray = `${((score ?? 0)/100) * 220} 220`;
+
+  return (
+    <svg width="180" height="100" viewBox="0 0 180 100">
+      <defs>
+        <linearGradient id={`gauge-${system.id}`} x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor={COLORS.capitulation} />
+          <stop offset="25%" stopColor={COLORS.recovery} />
+          <stop offset="50%" stopColor={COLORS.expansion} />
+          <stop offset="75%" stopColor={COLORS.lateBull} />
+          <stop offset="100%" stopColor={COLORS.euphoria} />
+        </linearGradient>
+      </defs>
+      <path d={`M 20 80 A ${r} ${r} 0 0 1 160 80`}
+        fill="none" stroke={COLORS.border} strokeWidth="12" strokeLinecap="round" />
+      <path d={`M 20 80 A ${r} ${r} 0 0 1 160 80`}
+        fill="none" stroke={`url(#gauge-${system.id})`} strokeWidth="9" strokeLinecap="round"
+        strokeDasharray={dashArray} />
+      {score != null && (
+        <>
+          <line x1={cx} y1={cy} x2={needleX} y2={needleY}
+            stroke={COLORS.text} strokeWidth="2.5" strokeLinecap="round" />
+          <circle cx={cx} cy={cy} r="5" fill={phase.color} />
+          <circle cx={cx} cy={cy} r="2.5" fill={COLORS.bg} />
+        </>
+      )}
+    </svg>
+  );
+}
+
+// ── Per-system card ──
+function SystemCard({ system }) {
+  const score = system.score;
+  const phase = phaseFor(score);
+  const isExtreme = score != null && (score >= 80 || score <= 20);
+
+  return (
+    <a href={system.dashboard_url} target="_blank" rel="noopener"
+       className={`system-card block rounded-2xl p-5 border ${isExtreme ? 'euphoria-glow' : ''}`}
+       style={{
+         background: `linear-gradient(180deg, ${COLORS.bgCard} 0%, ${COLORS.bgElevated} 100%)`,
+         borderColor: phase.color + '40',
+         textDecoration: 'none',
+         color: COLORS.text,
+       }}>
+      {/* Header */}
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2">
+          <span className="text-2xl" style={{ color: system.color }}>{system.icon}</span>
+          <div>
+            <div className="text-base font-bold tracking-tight">{system.name}</div>
+            <div className="text-[10px] uppercase tracking-widest"
+              style={{ color: COLORS.textMuted }}>{system.asset_class}</div>
+          </div>
+        </div>
+        {system.status === 'unreachable' && (
+          <span className="text-[10px] px-2 py-0.5 rounded"
+            style={{ background: COLORS.red + '20', color: COLORS.red }}>
+            offline
+          </span>
+        )}
+      </div>
+
+      {/* Gauge + Score */}
+      <div className="flex items-center justify-center mb-2">
+        <SystemGauge system={system} />
+      </div>
+
+      <div className="text-center mb-3">
+        <div className="text-5xl font-extrabold tabular-nums tracking-tight font-mono"
+          style={{ color: phase.color }}>
+          {score != null ? Math.round(score) : '--'}
+        </div>
+        <div className="flex items-center justify-center gap-1.5 mt-1">
+          <span className="text-base">{phase.emoji}</span>
+          <span className="text-sm font-semibold" style={{ color: phase.color }}>
+            {phase.name}
+          </span>
+        </div>
+        {system.subsystem_phase && system.subsystem_phase !== phase.name && (
+          <div className="text-[10px] mt-1" style={{ color: COLORS.textMuted }}>
+            subsystem: {system.subsystem_phase}
+          </div>
+        )}
+      </div>
+
+      {/* Dimensions mini-bars */}
+      {system.dimensions && (
+        <div className="space-y-1 pt-3 border-t" style={{ borderColor: COLORS.border }}>
+          {Object.entries(system.dimensions).map(([dim, val]) => (
+            <div key={dim} className="flex items-center gap-2 text-[10px]">
+              <span className="w-20 truncate" style={{ color: COLORS.textMuted }}>{dim}</span>
+              <div className="flex-1 h-1.5 rounded-full overflow-hidden"
+                style={{ background: COLORS.border }}>
+                {val != null && (
+                  <div className="h-full rounded-full"
+                    style={{ width: `${val}%`,
+                      background: `linear-gradient(90deg, ${COLORS.capitulation}, ${COLORS.recovery}, ${COLORS.expansion}, ${COLORS.lateBull}, ${COLORS.euphoria})` }} />
+                )}
+              </div>
+              <span className="w-7 text-right font-mono tabular-nums" style={{ color: COLORS.text }}>
+                {val != null ? Math.round(val) : '—'}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Footer */}
+      <div className="mt-3 pt-3 flex items-center justify-between text-[10px]"
+        style={{ borderTop: `1px solid ${COLORS.border}`, color: COLORS.textMuted }}>
+        <span>{system.description}</span>
+        {system.stale_hours != null && (
+          <span className="font-mono">
+            {system.stale_hours < 1 ? 'fresh' : `${Math.round(system.stale_hours)}h ago`}
+          </span>
+        )}
+      </div>
+    </a>
+  );
+}
+
+// ── Cycle Matrix (2D scatter of all systems) ──
+function CycleMatrix({ systems }) {
+  const valid = systems.filter(s => s.score != null);
+
+  // Build matrix data — each system is a point at (score, score)
+  // Plus historical trail if we add that later.
+  const points = valid.map((s, i) => ({
+    name: s.name,
+    icon: s.icon,
+    color: s.color,
+    score: s.score,
+    phase: s.phase,
+    // For 2D positioning, use index slot if no axis defined
+    x: s.score,
+    y: 100 - s.score,  // diagonal placement to spread points out
+  }));
+
+  return (
+    <div className="h-72">
+      <ResponsiveContainer width="100%" height="100%">
+        <ScatterChart margin={{ top: 20, right: 30, bottom: 30, left: 30 }}>
+          <CartesianGrid strokeDasharray="3 3" stroke={COLORS.border} opacity={0.3} />
+          {/* Phase background bands */}
+          <ReferenceArea x1={0} x2={20} fill={COLORS.capitulation} fillOpacity={0.08} />
+          <ReferenceArea x1={20} x2={40} fill={COLORS.recovery} fillOpacity={0.08} />
+          <ReferenceArea x1={40} x2={60} fill={COLORS.expansion} fillOpacity={0.08} />
+          <ReferenceArea x1={60} x2={80} fill={COLORS.lateBull} fillOpacity={0.08} />
+          <ReferenceArea x1={80} x2={100} fill={COLORS.euphoria} fillOpacity={0.08} />
+          <XAxis type="number" dataKey="x" domain={[0, 100]}
+            tick={{ fill: COLORS.textMuted, fontSize: 10 }}
+            label={{ value: 'Cycle Position', position: 'bottom',
+                     fill: COLORS.textMuted, fontSize: 11 }} />
+          <YAxis type="number" dataKey="y" domain={[0, 100]} hide />
+          <Tooltip
+            cursor={{ strokeDasharray: '3 3' }}
+            contentStyle={{ background: COLORS.bgElevated, border: `1px solid ${COLORS.borderStrong}`,
+              borderRadius: 8, fontSize: 12 }}
+            labelFormatter={() => ''}
+            formatter={(v, n, p) => [`${p.payload.name}: ${p.payload.score} (${p.payload.phase})`, '']}
+          />
+          <Scatter data={points} fill={COLORS.expansion}>
+            {points.map((p, i) => (
+              <Cell key={i} fill={p.color} />
+            ))}
+          </Scatter>
+        </ScatterChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}
+
+// ── Hub Stats ──
+function HubStatsBar({ insights }) {
+  const items = [
+    { label: 'Active', value: `${insights.active_systems}/${insights.total_systems}` },
+    { label: 'Avg Score', value: insights.avg_score != null ? insights.avg_score.toFixed(0) : '—' },
+    { label: 'Spread', value: insights.spread != null ? insights.spread.toFixed(0) : '—' },
+    { label: 'Extreme', value: insights.extreme_count },
+  ];
+  return (
+    <div className="flex items-stretch gap-3">
+      {items.map(item => (
+        <div key={item.label} className="flex-1 rounded-xl p-3 border"
+          style={{ background: COLORS.bgCard, borderColor: COLORS.border }}>
+          <div className="text-[10px] uppercase tracking-widest"
+            style={{ color: COLORS.textMuted }}>{item.label}</div>
+          <div className="text-2xl font-bold font-mono tabular-nums mt-1">
+            {item.value}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ── Insights / Narratives ──
+function NarrativesPanel({ narratives }) {
+  if (!narratives || narratives.length === 0) {
+    return (
+      <div className="text-center py-6 text-sm" style={{ color: COLORS.textMuted }}>
+        No critical signals across systems. All within normal ranges.
+      </div>
+    );
+  }
+  const colorFor = (type) => {
+    if (type === 'system_extreme' || type === 'euphoria_sync') return COLORS.lateBull;
+    if (type === 'capitulation_sync') return COLORS.recovery;
+    if (type === 'divergence') return COLORS.amber;
+    if (type === 'stale_data') return COLORS.textMuted;
+    return COLORS.blue;
+  };
+  return (
+    <div className="space-y-2">
+      {narratives.map((n, i) => (
+        <div key={i} className="rounded-xl p-3 border"
+          style={{ background: COLORS.bgElevated,
+            borderLeftColor: colorFor(n.type), borderLeftWidth: '3px',
+            borderColor: COLORS.border }}>
+          <div className="text-sm font-semibold mb-1">{n.title}</div>
+          <div className="text-xs" style={{ color: COLORS.textDim }}>{n.detail}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ── History sparkline per system (built from hub_history.json) ──
+function SystemHistoryChart({ history, systems }) {
+  if (!history || history.length < 2) {
+    return (
+      <div className="h-48 flex items-center justify-center text-sm"
+        style={{ color: COLORS.textMuted }}>
+        Need at least 2 daily snapshots. Come back tomorrow!
+      </div>
+    );
+  }
+  // Build chart data: [{ts, cci: 30, asci: 76, ...}, ...]
+  const data = history.map(h => {
+    const point = { ts: h.ts.slice(0,10) };
+    Object.entries(h.systems || {}).forEach(([id, v]) => {
+      point[id] = v.score;
+    });
+    return point;
+  });
+  return (
+    <div className="h-48">
+      <ResponsiveContainer width="100%" height="100%">
+        <LineChart data={data} margin={{ top: 5, right: 10, left: 0, bottom: 0 }}>
+          <CartesianGrid strokeDasharray="3 3" stroke={COLORS.border} opacity={0.3} />
+          <XAxis dataKey="ts" tick={{ fill: COLORS.textMuted, fontSize: 9 }}
+            tickFormatter={(v) => v.slice(5)} interval="preserveStartEnd" />
+          <YAxis domain={[0, 100]} tick={{ fill: COLORS.textMuted, fontSize: 9 }} />
+          <Tooltip contentStyle={{ background: COLORS.bgElevated,
+            border: `1px solid ${COLORS.borderStrong}`,
+            borderRadius: 8, fontSize: 11 }}
+            labelStyle={{ color: COLORS.textDim }} />
+          <ReferenceLine y={80} stroke={COLORS.euphoria} strokeDasharray="3 3" opacity={0.5} />
+          <ReferenceLine y={20} stroke={COLORS.capitulation} strokeDasharray="3 3" opacity={0.5} />
+          {systems.map(s => (
+            <Line key={s.id} type="monotone" dataKey={s.id} stroke={s.color}
+              strokeWidth={2} dot={false} name={s.name} />
+          ))}
+        </LineChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}
+
+// ── Main Dashboard ──
+function Dashboard() {
+  const [hub, setHub] = useState(null);
+  const [history, setHistory] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const [h, hist] = await Promise.all([
+          fetchJSON('hub_summary.json'),
+          fetchJSON('hub_history.json').catch(() => []),
+        ]);
+        setHub(h);
+        setHistory(Array.isArray(hist) ? hist : []);
+      } catch (e) {
+        setError(e.message);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen p-6 flex items-center justify-center">
+        <div className="shimmer rounded-xl w-96 h-64 border"
+          style={{ borderColor: COLORS.border }} />
+      </div>
+    );
+  }
+
+  if (error || !hub) {
+    return (
+      <div className="min-h-screen p-6 flex flex-col items-center justify-center">
+        <div className="text-xl mb-2">⚠️ Failed to load hub data</div>
+        <div className="text-sm" style={{ color: COLORS.textMuted }}>{error}</div>
+      </div>
+    );
+  }
+
+  const generated = new Date(hub.generated_at);
+
+  return (
+    <div className="min-h-screen p-4 md:p-6">
+      <div className="max-w-[1400px] mx-auto">
+        {/* Header */}
+        <header className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-3">
+          <div>
+            <h1 className="text-3xl md:text-4xl font-bold tracking-tight">
+              <span>Cycle Intelligence </span>
+              <span style={{
+                background: `linear-gradient(90deg, ${COLORS.recovery}, ${COLORS.expansion}, ${COLORS.lateBull})`,
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+              }}>Hub</span>
+            </h1>
+            <p className="text-xs mt-1" style={{ color: COLORS.textMuted }}>
+              Aggregated cycle positioning across all market intelligence systems
+            </p>
+          </div>
+          <div className="text-xs font-mono" style={{ color: COLORS.textDim }}>
+            <div style={{ color: COLORS.textMuted }}>Last Updated</div>
+            <div>{generated.toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })} KST</div>
+          </div>
+        </header>
+
+        {/* Hub Stats */}
+        <div className="mb-6">
+          <HubStatsBar insights={hub.insights} />
+        </div>
+
+        {/* System Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+          {hub.systems.map(s => (
+            <SystemCard key={s.id} system={s} />
+          ))}
+        </div>
+
+        {/* Bottom row: Cycle Matrix + Narratives */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+          <Card className="lg:col-span-2" title="Cycle Position Map" icon="🗺️"
+            subtitle="all systems on the cycle spectrum">
+            <CycleMatrix systems={hub.systems} />
+            <div className="flex justify-between mt-2 px-2 text-[10px]"
+              style={{ color: COLORS.textMuted }}>
+              {PHASE_DEFS.map(p => (
+                <div key={p.name} className="text-center">
+                  <span style={{ color: p.color }}>●</span> {p.name}
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          <Card title="Cross-System Insights" icon="🎯"
+            subtitle={`${hub.insights.narratives.length} signals`}>
+            <NarrativesPanel narratives={hub.insights.narratives} />
+          </Card>
+        </div>
+
+        {/* History Timeline */}
+        <Card title="System Score Timeline" icon="📈"
+          subtitle={`${history.length} snapshots`} className="mb-6">
+          <SystemHistoryChart history={history} systems={hub.systems} />
+        </Card>
+
+        {/* Footer */}
+        <footer className="mt-8 pt-6 border-t text-xs"
+          style={{ borderColor: COLORS.border, color: COLORS.textMuted }}>
+          <div className="flex flex-wrap gap-4 justify-between items-center">
+            <div>
+              Hub aggregates {hub.systems.length} cycle intelligence systems via registry.yaml
+            </div>
+            <div className="font-mono">
+              v{hub.version} · Generated {generated.toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })} KST
+            </div>
+          </div>
+        </footer>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<Dashboard />);
+</script>
+</body>
+</html>

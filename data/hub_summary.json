@@ -1,0 +1,74 @@
+{
+  "generated_at": "2026-04-22T22:42:21.371909+00:00",
+  "version": "1.0",
+  "systems": [
+    {
+      "id": "cci",
+      "name": "Crypto Cycle",
+      "asset_class": "Crypto",
+      "description": "Bitcoin & broader crypto cycle positioning",
+      "icon": "₿",
+      "color": "#f7931a",
+      "dashboard_url": "https://jinhae8971.github.io/crypto-cycle-intelligence/",
+      "axis": "x",
+      "fetched_at": "2026-04-22T22:42:20.740396+00:00",
+      "status": "ok",
+      "score": 30.22,
+      "subsystem_phase": "Accumulation",
+      "phase": "Recovery",
+      "phase_emoji": "🌱",
+      "phase_color": "#3a8891",
+      "dimensions": {
+        "valuation": 25.93,
+        "onchain": 22.27,
+        "sentiment": 27.5,
+        "derivatives": null,
+        "macro": null,
+        "technical": 50.7
+      },
+      "source_generated_at": "2026-04-22T19:07:18.312320+00:00",
+      "stale_hours": 3.58
+    },
+    {
+      "id": "asci",
+      "name": "AI / Semiconductor",
+      "asset_class": "Equities",
+      "description": "AI infrastructure & semiconductor sector cycle",
+      "icon": "🤖",
+      "color": "#3b82f6",
+      "dashboard_url": "https://jinhae8971.github.io/ai-semi-cycle-intelligence/",
+      "axis": "y",
+      "fetched_at": "2026-04-22T22:42:21.371243+00:00",
+      "status": "ok",
+      "score": 76.22,
+      "subsystem_phase": "Late Bull",
+      "phase": "Late Bull",
+      "phase_emoji": "🔥",
+      "phase_color": "#e76f51",
+      "dimensions": {
+        "valuation": 55.97,
+        "earnings": 80.15,
+        "capital": 73.57,
+        "sentiment": 84.82,
+        "macro": null,
+        "technical": 98.75
+      },
+      "source_generated_at": "2026-04-22T22:21:34.867549+00:00",
+      "stale_hours": 0.35
+    }
+  ],
+  "insights": {
+    "total_systems": 2,
+    "active_systems": 2,
+    "avg_score": 53.22,
+    "spread": 46.0,
+    "extreme_count": 0,
+    "narratives": [
+      {
+        "type": "divergence",
+        "title": "Major cross-asset divergence",
+        "detail": "AI / Semiconductor (76, Late Bull) vs Crypto Cycle (30, Recovery) — spread 46"
+      }
+    ]
+  }
+}

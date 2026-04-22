@@ -1,0 +1,107 @@
+name: hub-pipeline
+
+# Aggregates all registered cycle intelligence systems.
+# Runs every 6 hours, plus a main daily run at 23:45 UTC (08:45 KST).
+# Schedule: AFTER subsystems finish their 23:30 UTC daily runs,
+# so the hub has fresh data when it builds the daily report.
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"     # every 6h
+    - cron: "45 23 * * *"     # daily 08:45 KST main run
+  workflow_dispatch:
+
+concurrency:
+  group: cycle-hub
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  aggregate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install deps
+        run: pip install -r requirements.txt
+
+      - name: Resolve hub URL
+        id: hub_info
+        run: |
+          HUB_URL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/"
+          echo "url=$HUB_URL" >> $GITHUB_OUTPUT
+          echo "HUB_URL=$HUB_URL" >> $GITHUB_ENV
+
+      - name: Run hub aggregation
+        env:
+          TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          HUB_URL: ${{ env.HUB_URL }}
+          TZ: "Asia/Seoul"
+        run: python scripts/run_hub.py
+
+      - name: Commit JSON artifacts
+        run: |
+          git config user.name  "hub-bot[bot]"
+          git config user.email "hub-bot[bot]@users.noreply.github.com"
+          git add data/
+          if git diff --staged --quiet; then
+            echo "No data changes to commit"
+          else
+            git commit -m "chore: hub update $(date -u '+%Y-%m-%dT%H:%MZ')"
+            git push
+          fi
+
+      - name: Stage data JSON for Pages
+        run: |
+          mkdir -p docs/site/data
+          cp -r data/* docs/site/data/ 2>/dev/null || true
+          ls -la docs/site/data/
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./docs/site
+          name: github-pages
+
+      - name: Notify on failure
+        if: failure()
+        env:
+          TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          python - <<'EOF'
+          import os, requests
+          t = os.environ.get("TELEGRAM_TOKEN", "")
+          c = os.environ.get("TELEGRAM_CHAT_ID", "")
+          if t and c:
+              requests.post(
+                  f"https://api.telegram.org/bot{t}/sendMessage",
+                  json={"chat_id": c,
+                        "text": "❌ Hub pipeline failed.\nCheck: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"},
+                  timeout=10)
+          EOF
+
+  deploy:
+    needs: aggregate
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

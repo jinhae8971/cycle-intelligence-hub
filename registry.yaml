@@ -1,0 +1,70 @@
+# Cycle Intelligence Hub — Registry
+#
+# Add a new system by appending to the `systems:` list.
+# The hub will automatically pick it up on the next pipeline run.
+#
+# Required fields:
+#   id              Short unique identifier (used in URLs/logs)
+#   name            Display name on the hub dashboard
+#   asset_class     Category for grouping (e.g., "Crypto", "Equities")
+#   data_url        Where to fetch latest.json from
+#   dashboard_url   Click-through link to the system's own dashboard
+#   icon            Single emoji shown on the hub
+#   color           Brand color (hex, used for accents)
+#   score_path      Dot-path inside latest.json to the composite score
+#   phase_path      Dot-path to the phase string (e.g., "Accumulation")
+#   dimensions_path Dot-path to the dimension scores dict
+#
+# Optional fields:
+#   axis            Which axis on the cycle matrix ("x" or "y")
+#                   Hub renders a 2D matrix from the two systems with axes assigned
+#   description     One-line subtitle on the card
+
+systems:
+
+  - id: cci
+    name: "Crypto Cycle"
+    asset_class: "Crypto"
+    description: "Bitcoin & broader crypto cycle positioning"
+    data_url: "https://jinhae8971.github.io/crypto-cycle-intelligence/data/latest.json"
+    dashboard_url: "https://jinhae8971.github.io/crypto-cycle-intelligence/"
+    icon: "₿"
+    color: "#f7931a"
+    score_path: "ccs.composite"
+    phase_path: "ccs.phase"
+    dimensions_path: "ccs.dimensions"
+    axis: "x"
+
+  - id: asci
+    name: "AI / Semiconductor"
+    asset_class: "Equities"
+    description: "AI infrastructure & semiconductor sector cycle"
+    data_url: "https://jinhae8971.github.io/ai-semi-cycle-intelligence/data/latest.json"
+    dashboard_url: "https://jinhae8971.github.io/ai-semi-cycle-intelligence/"
+    icon: "🤖"
+    color: "#3b82f6"
+    score_path: "ascs.composite"
+    phase_path: "ascs.phase"
+    dimensions_path: "ascs.dimensions"
+    axis: "y"
+
+  # ─────────────────────────────────────────────────────────────
+  # Future systems to add (commented examples):
+  # ─────────────────────────────────────────────────────────────
+  #
+  # - id: kospi
+  #   name: "KOSPI Sector"
+  #   asset_class: "Equities"
+  #   description: "Korean equity sector rotation cycle"
+  #   data_url: "https://jinhae8971.github.io/kospi-sector-advisor/data/latest.json"
+  #   dashboard_url: "https://jinhae8971.github.io/kospi-sector-advisor/"
+  #   icon: "🇰🇷"
+  #   color: "#dc2626"
+  #   score_path: "score"
+  #   phase_path: "phase"
+  #   dimensions_path: "dimensions"
+  #
+  # - id: realestate
+  #   name: "Real Estate"
+  #   asset_class: "Real Assets"
+  #   ...
