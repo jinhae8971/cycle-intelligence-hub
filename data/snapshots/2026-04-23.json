@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-23T13:11:05.866695+00:00",
+  "generated_at": "2026-04-23T19:00:00.842974+00:00",
   "version": "1.0",
   "systems": [
     {
@@ -11,23 +11,23 @@
       "color": "#f7931a",
       "dashboard_url": "https://jinhae8971.github.io/crypto-cycle-intelligence/",
       "axis": "x",
-      "fetched_at": "2026-04-23T13:11:05.644631+00:00",
+      "fetched_at": "2026-04-23T19:00:00.758324+00:00",
       "status": "ok",
-      "score": 32.93,
+      "score": 32.54,
       "subsystem_phase": "Accumulation",
       "phase": "Recovery",
       "phase_emoji": "🌱",
       "phase_color": "#3a8891",
       "dimensions": {
-        "valuation": 25.8,
+        "valuation": 25.74,
         "onchain": 21.0,
         "sentiment": 45.0,
         "derivatives": null,
         "macro": null,
-        "technical": 48.67
+        "technical": 46.82
       },
-      "source_generated_at": "2026-04-23T07:44:49.209667+00:00",
-      "stale_hours": 5.44
+      "source_generated_at": "2026-04-23T13:18:13.959805+00:00",
+      "stale_hours": 5.7
     },
     {
       "id": "asci",
@@ -38,30 +38,30 @@
       "color": "#3b82f6",
       "dashboard_url": "https://jinhae8971.github.io/ai-semi-cycle-intelligence/",
       "axis": "y",
-      "fetched_at": "2026-04-23T13:11:05.866539+00:00",
+      "fetched_at": "2026-04-23T19:00:00.842891+00:00",
       "status": "ok",
-      "score": 76.22,
+      "score": 76.02,
       "subsystem_phase": "Late Bull",
       "phase": "Late Bull",
       "phase_emoji": "🔥",
       "phase_color": "#e76f51",
       "dimensions": {
-        "valuation": 55.97,
+        "valuation": 55.71,
         "earnings": 80.15,
         "capital": 73.57,
-        "sentiment": 84.82,
+        "sentiment": 84.27,
         "macro": null,
-        "technical": 98.75
+        "technical": 98.59
       },
-      "source_generated_at": "2026-04-22T22:21:34.867549+00:00",
-      "stale_hours": 14.83
+      "source_generated_at": "2026-04-23T18:40:55.740768+00:00",
+      "stale_hours": 0.32
     }
   ],
   "insights": {
     "total_systems": 2,
     "active_systems": 2,
-    "avg_score": 54.58,
-    "spread": 43.29,
+    "avg_score": 54.28,
+    "spread": 43.48,
     "extreme_count": 0,
     "narratives": [
       {
