@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-23T02:01:21.161821+00:00",
+  "generated_at": "2026-04-23T07:26:34.845177+00:00",
   "version": "1.0",
   "systems": [
     {
@@ -11,23 +11,23 @@
       "color": "#f7931a",
       "dashboard_url": "https://jinhae8971.github.io/crypto-cycle-intelligence/",
       "axis": "x",
-      "fetched_at": "2026-04-23T02:01:21.064659+00:00",
+      "fetched_at": "2026-04-23T07:26:34.688441+00:00",
       "status": "ok",
-      "score": 33.37,
+      "score": 33.4,
       "subsystem_phase": "Accumulation",
       "phase": "Recovery",
       "phase_emoji": "🌱",
       "phase_color": "#3a8891",
       "dimensions": {
-        "valuation": 25.86,
+        "valuation": 25.87,
         "onchain": 22.27,
         "sentiment": 45.0,
         "derivatives": null,
         "macro": null,
-        "technical": 49.03
+        "technical": 49.2
       },
-      "source_generated_at": "2026-04-23T00:11:35.116306+00:00",
-      "stale_hours": 1.83
+      "source_generated_at": "2026-04-23T02:10:33.675292+00:00",
+      "stale_hours": 5.27
     },
     {
       "id": "asci",
@@ -38,7 +38,7 @@
       "color": "#3b82f6",
       "dashboard_url": "https://jinhae8971.github.io/ai-semi-cycle-intelligence/",
       "axis": "y",
-      "fetched_at": "2026-04-23T02:01:21.161700+00:00",
+      "fetched_at": "2026-04-23T07:26:34.845079+00:00",
       "status": "ok",
       "score": 76.22,
       "subsystem_phase": "Late Bull",
@@ -54,14 +54,14 @@
         "technical": 98.75
       },
       "source_generated_at": "2026-04-22T22:21:34.867549+00:00",
-      "stale_hours": 3.66
+      "stale_hours": 9.08
     }
   ],
   "insights": {
     "total_systems": 2,
     "active_systems": 2,
-    "avg_score": 54.8,
-    "spread": 42.85,
+    "avg_score": 54.81,
+    "spread": 42.82,
     "extreme_count": 0,
     "narratives": [
       {
