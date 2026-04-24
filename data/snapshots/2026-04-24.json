@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-24T13:07:15.054133+00:00",
+  "generated_at": "2026-04-24T18:40:15.785563+00:00",
   "version": "1.0",
   "systems": [
     {
@@ -11,23 +11,23 @@
       "color": "#f7931a",
       "dashboard_url": "https://jinhae8971.github.io/crypto-cycle-intelligence/",
       "axis": "x",
-      "fetched_at": "2026-04-24T13:07:14.906173+00:00",
+      "fetched_at": "2026-04-24T18:40:15.704197+00:00",
       "status": "ok",
-      "score": 31.02,
+      "score": 31.64,
       "subsystem_phase": "Accumulation",
       "phase": "Recovery",
       "phase_emoji": "🌱",
       "phase_color": "#3a8891",
       "dimensions": {
-        "valuation": 26.59,
+        "valuation": 26.68,
         "onchain": 20.97,
         "sentiment": 36.25,
         "derivatives": null,
         "macro": null,
-        "technical": 46.6
+        "technical": 49.53
       },
-      "source_generated_at": "2026-04-24T07:56:13.237251+00:00",
-      "stale_hours": 5.18
+      "source_generated_at": "2026-04-24T13:14:11.148876+00:00",
+      "stale_hours": 5.43
     },
     {
       "id": "asci",
@@ -38,36 +38,36 @@
       "color": "#3b82f6",
       "dashboard_url": "https://jinhae8971.github.io/ai-semi-cycle-intelligence/",
       "axis": "y",
-      "fetched_at": "2026-04-24T13:07:15.054017+00:00",
+      "fetched_at": "2026-04-24T18:40:15.785474+00:00",
       "status": "ok",
-      "score": 76.04,
+      "score": 76.65,
       "subsystem_phase": "Late Bull",
       "phase": "Late Bull",
       "phase_emoji": "🔥",
       "phase_color": "#e76f51",
       "dimensions": {
-        "valuation": 55.72,
-        "earnings": 80.15,
+        "valuation": 57.02,
+        "earnings": 82.58,
         "capital": 73.57,
-        "sentiment": 84.25,
+        "sentiment": 81.76,
         "macro": null,
-        "technical": 98.66
+        "technical": 99.45
       },
-      "source_generated_at": "2026-04-23T22:56:36.456679+00:00",
-      "stale_hours": 14.18
+      "source_generated_at": "2026-04-24T18:04:52.993010+00:00",
+      "stale_hours": 0.59
     }
   ],
   "insights": {
     "total_systems": 2,
     "active_systems": 2,
-    "avg_score": 53.53,
-    "spread": 45.02,
+    "avg_score": 54.15,
+    "spread": 45.01,
     "extreme_count": 0,
     "narratives": [
       {
         "type": "divergence",
         "title": "Major cross-asset divergence",
-        "detail": "AI / Semiconductor (76, Late Bull) vs Crypto Cycle (31, Recovery) — spread 45"
+        "detail": "AI / Semiconductor (77, Late Bull) vs Crypto Cycle (32, Recovery) — spread 45"
       }
     ]
   }
