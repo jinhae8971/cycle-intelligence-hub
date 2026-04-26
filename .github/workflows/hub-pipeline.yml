@@ -1,11 +1,12 @@
 name: hub-pipeline
 
 # Aggregates all registered cycle intelligence systems.
-# Runs once daily at 22:20 UTC (07:20 KST), after subsystem reports finish.
+# Runs once daily at 22:00 UTC (07:00 KST), after subsystem data refreshes.
+# Telegram is sent on every scheduled hub run.
 
 on:
   schedule:
-    - cron: "20 22 * * *"     # daily 07:20 KST
+    - cron: "0 22 * * *"     # daily 07:00 KST
   workflow_dispatch:
 
 concurrency:
