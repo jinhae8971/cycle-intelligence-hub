@@ -1,14 +1,11 @@
 name: hub-pipeline
 
 # Aggregates all registered cycle intelligence systems.
-# Runs every 6 hours, plus a main daily run at 23:45 UTC (08:45 KST).
-# Schedule: AFTER subsystems finish their 23:30 UTC daily runs,
-# so the hub has fresh data when it builds the daily report.
+# Runs once daily at 22:20 UTC (07:20 KST), after subsystem reports finish.
 
 on:
   schedule:
-    - cron: "0 */6 * * *"     # every 6h
-    - cron: "45 23 * * *"     # daily 08:45 KST main run
+    - cron: "20 22 * * *"     # daily 07:20 KST
   workflow_dispatch:
 
 concurrency:
