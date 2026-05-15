@@ -343,5 +343,20 @@
     },
     "avg": 58.36,
     "spread": 43.03
+  },
+  {
+    "ts": "2026-05-15T23:02:14.977494+00:00",
+    "systems": {
+      "cci": {
+        "score": 36.84,
+        "phase": "Recovery"
+      },
+      "asci": {
+        "score": 79.87,
+        "phase": "Late Bull"
+      }
+    },
+    "avg": 58.36,
+    "spread": 43.03
   }
 ]
