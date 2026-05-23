@@ -1,83 +1,137 @@
 {
-  "generated_at": "2026-05-15T23:02:14.977494+00:00",
-  "version": "1.0",
+  "generated_at": "2026-05-23T12:07:09.803845+00:00",
+  "version": "2.0",
   "systems": [
     {
       "id": "cci",
       "name": "Crypto Cycle",
       "asset_class": "Crypto",
-      "description": "Bitcoin & broader crypto cycle positioning",
-      "icon": "₿",
+      "description": "Bitcoin and broader crypto cycle positioning.",
+      "label": "CCI",
       "color": "#f7931a",
       "dashboard_url": "https://jinhae8971.github.io/crypto-cycle-intelligence/",
+      "data_url": "https://jinhae8971.github.io/crypto-cycle-intelligence/data/latest.json",
       "axis": "x",
-      "fetched_at": "2026-05-15T23:02:14.832059+00:00",
+      "fetched_at": "2026-05-23T12:07:04.791091+00:00",
       "status": "ok",
-      "score": 36.84,
-      "subsystem_phase": "Accumulation",
+      "error": null,
+      "score": 23.89,
       "phase": "Recovery",
-      "phase_emoji": "🌱",
       "phase_color": "#3a8891",
+      "subsystem_phase": "Accumulation",
       "dimensions": {
-        "valuation": 28.35,
-        "onchain": 26.24,
-        "sentiment": 47.5,
+        "valuation": 26.5,
+        "onchain": 20.66,
+        "sentiment": 22.5,
         "derivatives": null,
         "macro": null,
-        "technical": 54.46
+        "technical": 25.22
       },
-      "source_generated_at": "2026-05-11T22:00:24.378060+00:00",
-      "stale_hours": 97.03
+      "source_generated_at": "2026-05-22T21:56:30.324062+00:00",
+      "stale_hours": 14.18,
+      "metrics": {}
     },
     {
       "id": "asci",
       "name": "AI / Semiconductor",
       "asset_class": "Equities",
-      "description": "AI infrastructure & semiconductor sector cycle",
-      "icon": "🤖",
+      "description": "AI infrastructure and semiconductor sector cycle.",
+      "label": "ASCI",
       "color": "#3b82f6",
       "dashboard_url": "https://jinhae8971.github.io/ai-semi-cycle-intelligence/",
+      "data_url": "https://jinhae8971.github.io/ai-semi-cycle-intelligence/data/latest.json",
       "axis": "y",
-      "fetched_at": "2026-05-15T23:02:14.977388+00:00",
+      "fetched_at": "2026-05-23T12:07:06.102976+00:00",
       "status": "ok",
-      "score": 79.87,
-      "subsystem_phase": "Late Bull",
+      "error": null,
+      "score": 78.4,
       "phase": "Late Bull",
-      "phase_emoji": "🔥",
       "phase_color": "#e76f51",
+      "subsystem_phase": "Late Bull",
       "dimensions": {
-        "valuation": 61.28,
-        "earnings": 88.71,
-        "capital": 73.27,
-        "sentiment": 85.55,
+        "valuation": 56.32,
+        "earnings": 92.44,
+        "capital": 73.07,
+        "sentiment": 85.25,
         "macro": null,
-        "technical": 100.0
+        "technical": 94.93
       },
-      "source_generated_at": "2026-05-11T22:05:53.136716+00:00",
-      "stale_hours": 96.94
+      "source_generated_at": "2026-05-22T22:13:33.588731+00:00",
+      "stale_hours": 13.89,
+      "metrics": {}
+    },
+    {
+      "id": "kospi-valuation",
+      "name": "KOSPI Valuation Radar",
+      "asset_class": "Korea Equities",
+      "description": "KOSPI/KOSDAQ valuation breadth and sector valuation monitor.",
+      "label": "KVR",
+      "color": "#dc2626",
+      "dashboard_url": "https://jinhae8971.github.io/kospi-valuation-radar/",
+      "data_url": "https://jinhae8971.github.io/kospi-valuation-radar/data/latest.json",
+      "axis": null,
+      "fetched_at": "2026-05-23T12:07:07.520087+00:00",
+      "status": "ok",
+      "error": null,
+      "score": null,
+      "phase": "No score",
+      "phase_color": "#6b7280",
+      "subsystem_phase": null,
+      "dimensions": null,
+      "source_generated_at": "2026-05-16T07:54:40.888779+09:00",
+      "stale_hours": 181.21,
+      "metrics": {
+        "universe": 145,
+        "market": "KOSPI/KOSDAQ"
+      }
+    },
+    {
+      "id": "us-valuation",
+      "name": "US Valuation Radar",
+      "asset_class": "US Equities",
+      "description": "US AI, semiconductor, and big tech valuation monitor.",
+      "label": "UVR",
+      "color": "#10b981",
+      "dashboard_url": "https://jinhae8971.github.io/us-valuation-radar/",
+      "data_url": "https://jinhae8971.github.io/us-valuation-radar/data/latest.json",
+      "axis": null,
+      "fetched_at": "2026-05-23T12:07:08.855307+00:00",
+      "status": "ok",
+      "error": null,
+      "score": null,
+      "phase": "No score",
+      "phase_color": "#6b7280",
+      "subsystem_phase": null,
+      "dimensions": null,
+      "source_generated_at": "2026-05-16T07:51:56.242334+09:00",
+      "stale_hours": 181.25,
+      "metrics": {
+        "universe": 108
+      }
     }
   ],
   "insights": {
-    "total_systems": 2,
-    "active_systems": 2,
-    "avg_score": 58.36,
-    "spread": 43.03,
-    "extreme_count": 0,
+    "total_systems": 4,
+    "reachable_systems": 4,
+    "scored_systems": 2,
+    "avg_score": 51.15,
+    "spread": 54.51,
+    "stale_systems": 2,
     "narratives": [
       {
         "type": "divergence",
-        "title": "Major cross-asset divergence",
-        "detail": "AI / Semiconductor (80, Late Bull) vs Crypto Cycle (37, Recovery) — spread 43"
+        "title": "Large cross-system divergence",
+        "detail": "AI / Semiconductor is at 78 while Crypto Cycle is at 24; spread is 55."
       },
       {
         "type": "stale_data",
-        "title": "⏰ Crypto Cycle data stale",
-        "detail": "Last update 97h ago — pipeline may be down."
+        "title": "KOSPI Valuation Radar data is stale",
+        "detail": "Last source update was 181 hours ago."
       },
       {
         "type": "stale_data",
-        "title": "⏰ AI / Semiconductor data stale",
-        "detail": "Last update 97h ago — pipeline may be down."
+        "title": "US Valuation Radar data is stale",
+        "detail": "Last source update was 181 hours ago."
       }
     ]
   }
