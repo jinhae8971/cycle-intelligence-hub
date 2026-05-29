@@ -358,5 +358,37 @@
     },
     "avg": 58.36,
     "spread": 43.03
+  },
+  {
+    "ts": "2026-05-29T23:15:45.529662+00:00",
+    "systems": {
+      "cci": {
+        "score": 19.2,
+        "phase": "Capitulation",
+        "status": "ok"
+      },
+      "asci": {
+        "score": 78.09,
+        "phase": "Late Bull",
+        "status": "ok"
+      },
+      "kospi-valuation": {
+        "score": null,
+        "phase": "No score",
+        "status": "ok"
+      },
+      "us-valuation": {
+        "score": null,
+        "phase": "No score",
+        "status": "ok"
+      },
+      "asts": {
+        "score": 58.7,
+        "phase": "Expansion",
+        "status": "ok"
+      }
+    },
+    "avg": 52.0,
+    "spread": 58.89
   }
 ]
