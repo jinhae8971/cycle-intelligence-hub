@@ -63,3 +63,17 @@ systems:
       - "generated_at_kst"
     metrics:
       universe: "universe_size"
+
+  - id: asts
+    name: "AI Semi Cycle-Top"
+    asset_class: "Equities"
+    description: "AI semiconductor rally cycle-top detection (composite top-proximity, decisive-trigger overlay)."
+    label: "ASTS"
+    color: "#ef4444"
+    data_url: "https://jinhae8971.github.io/ai-semi-top-monitor/data/latest.json"
+    dashboard_url: "https://jinhae8971.github.io/ai-semi-top-monitor/"
+    score_path: "asts.composite"
+    phase_path: "asts.phase"
+    dimensions_path: "asts.dimensions"
+    generated_at_paths:
+      - "generated_at"
